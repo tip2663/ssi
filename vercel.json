@@ -1,7 +1,7 @@
 {
     "headers": [
         {
-            "source": "/.well-known/openid-credential-issuer",
+            "source": "/.well-known/(openid-credential-issuer|openid-credential-issuer)",
             "headers": [
                 {
                     "key": "Content-Type",
