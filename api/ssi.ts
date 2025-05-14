@@ -1,8 +1,7 @@
 import * as jose from 'jose';
+import { ISS_DID, ISS_PRIV_JWK } from './const.js';
 
 const BOT_JWK = { "crv": "Ed25519", "x": "Qh7WxBLCKdow-GYZMl0nwbHbLdkZecL1YtfDcDajiW0", "kty": "OKP", "alg": "EdDSA", "use": "sig", "kid": "TrUYWGFXBWKMUiZMxQvNHLAlutiH0T7i6rL06IpiBL0" }
-const ISS_PRIV_JWK = JSON.parse(process.env.ISS_PRIV_JWK!)
-const ISS_PUB_JWK = process.env.ISS_PUB_JWK
 
 export async function GET(request: Request) {
     return new Response('hello')
@@ -15,7 +14,7 @@ export async function POST(request: Request) {
         if (authcode) {
             const { payload } = await jose.jwtVerify(authcode, BOT_JWK)
             const priv_jwk = await jose.importJWK(ISS_PRIV_JWK)
-            const access_token = await new jose.SignJWT({ payload }).setIssuer(`did:jwk:${btoa(ISS_PUB_JWK||'')}`).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
+            const access_token = await new jose.SignJWT({ payload }).setIssuer(ISS_DID).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
             return new Response(JSON.stringify({
                 access_token,
                 token_type: "bearer",
