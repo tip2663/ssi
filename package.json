@@ -9,7 +9,8 @@
   "type": "module",
   "dependencies": {
     "did-jwt-vc": "^4.0.12",
-    "jose": "^6.0.11"
+    "jose": "^6.0.11",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "typescript": "^5.8.3"

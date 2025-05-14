@@ -2,19 +2,27 @@ import * as jose from 'jose';
 import { createVerifiableCredentialJwt, JwtCredentialPayload } from 'did-jwt-vc'
 import { ISS_DID, ISS_PRIV_JWK } from './const.js';
 
+// const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
+//     did: ISS_DID,
+//     signer: async (data) => {
+//         const buffersource: BufferSource = typeof data !== 'string' ? Buffer.from(data) : new TextEncoder().encode(data)
+//         const sig = await crypto.subtle.sign(
+//             'EdDSA',
+//             ISS_PRIV_JWK,
+//             buffersource
+//         );
+//         return Buffer.from(sig).toString('base64url');
+//     },
+//     alg: 'EdDSA'
+// }, { header: { 'kid': ISS_DID } })
 const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
     did: ISS_DID,
     signer: async (data) => {
-        const buffersource: BufferSource = typeof data !== 'string' ? Buffer.from(data) : new TextEncoder().encode(data)
-        const sig = await crypto.subtle.sign(
-            'EdDSA',
-            ISS_PRIV_JWK,
-            buffersource
-        );
-        return Buffer.from(sig).toString('base64url');
+        const buffersource = typeof data !== 'string' ? data : new TextEncoder().encode(data);
+        return (await new jose.FlattenedSign(buffersource).sign(ISS_PRIV_JWK)).signature
     },
-    alg: 'EdDSA'
-}, { header: { 'kid': ISS_DID } })
+    alg: 'EdDSA'  // Specify EdDSA as the algorithm
+}, { header: { 'kid': ISS_DID } });
 
 export async function POST(r: Request) {
     console.log('request: ', r)
