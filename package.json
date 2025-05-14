@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
     "jose": "^6.0.11"
   },
