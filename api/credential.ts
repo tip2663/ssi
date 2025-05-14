@@ -2,6 +2,7 @@ import * as jose from 'jose';
 import { JwtCredentialPayload } from 'did-jwt-vc'
 import { ISS_DID, ISS_PRIV_JWK, ISS_PUB_JWK } from './const.js';
 import * as uuid from 'uuid'
+import { create } from 'qrcode';
 
 // const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
 //     did: ISS_DID,
@@ -29,8 +30,7 @@ const issue = async (payload: JwtCredentialPayload) => new jose.SignJWT({...payl
 export async function POST(r: Request) {
     const jsonBodyPayload = await r.json()
 
-    const jwt = await jose.jwtVerify(r.headers.get('Authorization')?.split('Bearer ',2)[1]!, ISS_PUB_JWK);
-    console.log(jwt.payload)
+    const {payload:{payload:{subreddit,username,linkKarma,commentKarma,createdAt,sub:userId}}} = (await jose.jwtVerify(r.headers.get('Authorization')?.split('Bearer ',2)[1]!, ISS_PUB_JWK) as any);
 
     if (jsonBodyPayload['proof'] && jsonBodyPayload['proof']['proof_type'] === 'jwt') {
 
@@ -55,7 +55,12 @@ export async function POST(r: Request) {
                 },
                 credentialSubject: {
                     id: walletdid,
-                    somenumber: Math.round(Math.random() * 10)
+                    userId,
+                    username,
+                    subreddit,
+                    linkKarma,
+                    commentKarma,
+                    createdAt
                 },
                 issuanceDate: new Date().toISOString()
             },
