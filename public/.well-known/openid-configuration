@@ -1,52 +1,6 @@
 {
-    "credential_issuer": "https://reddit-ssi.vercel.app",
-    "token_endpoint": "https://reddit-ssi.vercel.app/api/ssi",
-    "credential_endpoint": "https://reddit-ssi.vercel.app/api/credential",
-    "display": [ { "name": "u/devvit-vc" } ],
-    "credential_configurations_supported": {
-        "SubredditMembership_jwt_vc_json": {
-            "format": "jwt_vc_json",
-            "cryptographic_binding_methods_supported": [ "did:jwk" ],
-            "credential_signing_alg_values_supported": [ "EdDSA" ],
-            "credential_definition": {
-                "type": [
-                    "VerifiableCredential",
-                    "SubredditMembership"
-                ],
-                "credentialSubject": {
-                    "subreddit":{
-                        "mandatory":true,
-                        "value_type":"string"
-                    },
-                    "username":{
-                        "mandatory":true,
-                        "value_type":"string"
-                    },
-                    "userId":{
-                        "mandatory":true,
-                        "value_type":"string"
-                    },
-                    "linkKarma":{
-                        "mandatory":true,
-                        "value_type":"number"
-                    },
-                    "commentKarma":{
-                        "mandatory":true,
-                        "value_type":"number"
-                    },
-                    "createdAt":{
-                        "mandatory":true,
-                        "value_type":"number"
-                    }
-                }
-            },
-            "display": [
-                {
-                    "name": "Subreddit Membership",
-                    "background_color": "#FF4500",
-                    "text_color": "#FFFFFF"
-                }
-            ]
-        }
-    }
+        "issuer": "https://reddit-ssi.vercel.app",
+        "authorization_endpoint": "https://reddit-ssi.vercel.app/oauth2/authorize",
+        "token_endpoint": "https://reddit-ssi.vercel.app/oauth2/token",
+        "jwks_uri": "https://reddit-ssi.vercel.app/.well-known/jwks.json"
 }
