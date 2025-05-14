@@ -25,6 +25,7 @@ export async function POST(r: Request) {
 
         // verify ssi wallet sender
         const decodedHeader = jose.decodeProtectedHeader(jsonBodyPayload.proof.jwt)
+        console.log(decodedHeader)
         const alg : string = decodedHeader.alg!
         const walletdid : string = decodedHeader.kid!
         const didjwk = await jose.importJWK({...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:',2)[1]))),alg})
