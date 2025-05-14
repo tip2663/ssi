@@ -21,8 +21,17 @@ export async function POST(r: Request) {
     console.log('request: ', r)
     const jsonBodyPayload = await r.json()
     console.log('body: ', jsonBodyPayload)
-    // if (jsonBodyPayload['proof'] && jsonBodyPayload['proof']['proof_type'] === 'jwt') {
-    //     const decodedHeader = jose.decodeJwt(jsonBodyPayload.proof.jwt).header  // TODO: verify!! https://github.com/decentralized-identity/did-jwt/issues/323
+    if (jsonBodyPayload['proof'] && jsonBodyPayload['proof']['proof_type'] === 'jwt') {
+
+        // verify ssi wallet sender
+        const decodedHeader : any = jose.decodeJwt(jsonBodyPayload.proof.jwt).header
+        const alg : string = decodedHeader.alg
+        const walletdid : string = decodedHeader.kid
+        const didjwk = await jose.importJWK({...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:',2)[1]))),alg})
+        await jose.jwtVerify(jsonBodyPayload.proof.jwt, didjwk)
+        
+        console.log(didjwk)
+
     //     const subjectId = decodedHeader.kid || '';
     //     console.log('subjectId: ', { subjectId })
 
@@ -46,6 +55,6 @@ export async function POST(r: Request) {
     //     console.log(credential)
     //     return new Response(JSON.stringify({ credential }), { headers: { 'content-type': 'application/json' } })
 
-    // }
+    }
     return new Response('no proof')
 }
