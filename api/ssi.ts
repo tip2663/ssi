@@ -20,11 +20,6 @@ export async function POST(request: Request) {
                 access_token,
                 token_type: "bearer",
                 expires_in: 60 * 5,
-                //authorization_details: [{
-                //    type: 'openid_credential',
-                //    credential_configuration_id: "SubredditMemberships",
-                //    credential_identifiers: ["SubredditMembership_jwt_vc_json"]
-                //}]
             }), { headers: { "cache-control": "no-store", "content-type": "application/json" } })
         }
     }
