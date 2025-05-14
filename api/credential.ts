@@ -62,7 +62,7 @@ export async function POST(r: Request) {
                     commentKarma,
                     createdAt
                 },
-                issuanceDate: new Date().toISOString()
+                issuanceDate: new Date(now).toISOString()
             },
             jti:`urn:uuid:${uuid.v4()}`
         })
