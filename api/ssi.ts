@@ -15,16 +15,16 @@ export async function POST(request: Request) {
         if (authcode) {
             const { payload } = await jose.jwtVerify(authcode, BOT_JWK)
             const priv_jwk = await jose.importJWK(ISS_PRIV_JWK)
-            const access_token = await new jose.SignJWT({ payload }).setIssuer(`did:jwk:${ISS_PUB_JWK}`).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
+            const access_token = await new jose.SignJWT({ payload }).setIssuer(`did:jwk:${btoa(ISS_PUB_JWK||'')}`).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
             return new Response(JSON.stringify({
                 access_token,
                 token_type: "bearer",
                 expires_in: 60 * 5,
-                authorization_details: [{
-                    type: 'openid_credential',
-                    credential_configuration_id: "SubredditMemberships",
-                    credential_identifiers: ["SubredditMembership_jwt_vc_json"]
-                }]
+                //authorization_details: [{
+                //    type: 'openid_credential',
+                //    credential_configuration_id: "SubredditMemberships",
+                //    credential_identifiers: ["SubredditMembership_jwt_vc_json"]
+                //}]
             }), { headers: { "cache-control": "no-store", "content-type": "application/json" } })
         }
     }
