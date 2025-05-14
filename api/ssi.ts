@@ -1,20 +1,14 @@
 import * as jose from 'jose';
-import { ISS_DID, ISS_PRIV_JWK } from './const.js';
+import { BOT_PUB_JWK, ISS_DID, ISS_PRIV_JWK } from './const.js';
 
-const BOT_JWK = { "crv": "Ed25519", "x": "Qh7WxBLCKdow-GYZMl0nwbHbLdkZecL1YtfDcDajiW0", "kty": "OKP", "alg": "EdDSA", "use": "sig", "kid": "TrUYWGFXBWKMUiZMxQvNHLAlutiH0T7i6rL06IpiBL0" }
-
-export async function GET(request: Request) {
-    return new Response('hello')
-}
 export async function POST(request: Request) {
     console.log(request)
     const formData = await request.formData()
     if (formData.get('grant_type') === 'urn:ietf:params:oauth:grant-type:pre-authorized_code') {
         const authcode = formData.get('pre-authorized_code')?.toString()
         if (authcode) {
-            const { payload } = await jose.jwtVerify(authcode, BOT_JWK)
-            const priv_jwk = await jose.importJWK(ISS_PRIV_JWK)
-            const access_token = await new jose.SignJWT({ payload }).setIssuer(ISS_DID).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
+            const { payload } = await jose.jwtVerify(authcode, BOT_PUB_JWK)
+            const access_token = await new jose.SignJWT({ payload }).setIssuer(ISS_DID).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(ISS_PRIV_JWK)
             return new Response(JSON.stringify({
                 access_token,
                 token_type: "bearer",

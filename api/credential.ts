@@ -1,13 +1,11 @@
 import * as jose from 'jose';
 import { createVerifiableCredentialJwt, JwtCredentialPayload } from 'did-jwt-vc'
-import { ISS_DID } from './const.js';
-
-const ISS_PRIV_JWK = JSON.parse(process.env.ISS_PRIV_JWK!)
+import { ISS_DID, ISS_PRIV_JWK } from './const.js';
 
 const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
     did: ISS_DID,
     signer: async (data) => {
-        const buffersource : BufferSource = typeof data !== 'string' ? Buffer.from(data) : new TextEncoder().encode(data)
+        const buffersource: BufferSource = typeof data !== 'string' ? Buffer.from(data) : new TextEncoder().encode(data)
         const sig = await crypto.subtle.sign(
             'EdDSA',
             ISS_PRIV_JWK,
@@ -27,15 +25,10 @@ export async function POST(r: Request) {
         // verify ssi wallet sender
         const decodedHeader = jose.decodeProtectedHeader(jsonBodyPayload.proof.jwt)
         console.log(decodedHeader)
-        const alg : string = decodedHeader.alg!
-        const walletdid : string = decodedHeader.kid!
-        const didjwk = await jose.importJWK({...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:',2)[1]))),alg})
+        const alg: string = decodedHeader.alg!
+        const walletdid: string = decodedHeader.kid!
+        const didjwk = await jose.importJWK({ ...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:', 2)[1]))), alg })
         await jose.jwtVerify(jsonBodyPayload.proof.jwt, didjwk)
-        
-
-    //     const subjectId = decodedHeader.kid || '';
-    //     console.log('subjectId: ', { subjectId })
-
         const credential = await issue({
             iat: Date.now(),
             sub: walletdid,
@@ -54,7 +47,7 @@ export async function POST(r: Request) {
             }
         })
         console.log(credential)
-        return new Response(JSON.stringify({ credential }), { headers: { 'content-type': 'application/json' } })
+        return new Response(JSON.stringify({ credential }), { headers: { 'cache-control': 'no-store', 'content-type': 'application/json' } })
 
     }
     return new Response('no proof')
