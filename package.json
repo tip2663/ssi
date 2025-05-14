@@ -2,16 +2,14 @@
   "name": "ssi",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": { },
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
-    "typescript": "^5.8.3"
-  },
   "dependencies": {
     "jose": "^6.0.11"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
   }
 }
