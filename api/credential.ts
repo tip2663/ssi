@@ -1,5 +1,5 @@
 import * as jose from 'jose';
-import { createVerifiableCredentialJwt, JwtCredentialPayload } from 'did-jwt-vc'
+import { JwtCredentialPayload } from 'did-jwt-vc'
 import { ISS_DID, ISS_PRIV_JWK } from './const.js';
 
 // const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
@@ -15,14 +15,15 @@ import { ISS_DID, ISS_PRIV_JWK } from './const.js';
 //     },
 //     alg: 'EdDSA'
 // }, { header: { 'kid': ISS_DID } })
-const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
-    did: ISS_DID,
-    signer: async (data) => {
-        const buffersource = typeof data !== 'string' ? data : new TextEncoder().encode(data);
-        return (await (await new jose.GeneralSign(buffersource).addSignature(ISS_PRIV_JWK)).sign()).signatures[0].signature
-    },
-    alg: 'EdDSA'  // Specify EdDSA as the algorithm
-}, { header: { 'kid': ISS_DID } });
+const issue = async (payload: JwtCredentialPayload) => new jose.SignJWT({...payload,iss:ISS_DID}).setProtectedHeader({alg:'EdDSA',kid:ISS_DID}).sign(ISS_PRIV_JWK)
+//  createVerifiableCredentialJwt(payload, {
+//     did: ISS_DID,
+//     signer: async (data) => {
+//         const buffersource = typeof data !== 'string' ? data : new TextEncoder().encode(data);
+//         return (await (await new jose.GeneralSign(buffersource).addSignature(ISS_PRIV_JWK)).sign()).signatures[0].signature
+//     },
+//     alg: 'EdDSA'  // Specify EdDSA as the algorithm
+// }, { header: { 'kid': ISS_DID } });
 
 export async function POST(r: Request) {
     console.log('request: ', r)
