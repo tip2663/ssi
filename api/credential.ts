@@ -39,7 +39,7 @@ export async function POST(r: Request) {
         console.log(decodedHeader)
         const alg: string = decodedHeader.alg!
         const walletdid: string = decodedHeader.kid!
-        const didjwk = await jose.importJWK({ ...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:', 2)[1]))), alg })
+        const didjwk = await jose.importJWK({ ...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:', 2)[1].replace(/#.+$/,'')))), alg })
         await jose.jwtVerify(jsonBodyPayload.proof.jwt, didjwk)
         const now = Date.now()
         const credential = await issue({
