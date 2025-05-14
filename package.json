@@ -2,12 +2,13 @@
   "name": "ssi",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": { },
+  "scripts": {},
   "author": "",
   "license": "ISC",
   "description": "",
   "type": "module",
   "dependencies": {
+    "did-jwt-vc": "^4.0.12",
     "jose": "^6.0.11"
   },
   "devDependencies": {
