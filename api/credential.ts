@@ -19,7 +19,7 @@ const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(p
     did: ISS_DID,
     signer: async (data) => {
         const buffersource = typeof data !== 'string' ? data : new TextEncoder().encode(data);
-        return (await new jose.FlattenedSign(buffersource).setUnprotectedHeader({}).sign(ISS_PRIV_JWK)).signature
+        return (await (await new jose.GeneralSign(buffersource).addSignature(ISS_PRIV_JWK)).sign()).signatures[0].signature
     },
     alg: 'EdDSA'  // Specify EdDSA as the algorithm
 }, { header: { 'kid': ISS_DID } });
