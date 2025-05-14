@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         if (authcode) {
             const { payload } = await jose.jwtVerify(authcode, BOT_JWK)
             const priv_jwk = await jose.importJWK(ISS_PRIV_JWK)
-            const access_token = new jose.SignJWT({ payload }).setIssuer(`did:jwk:${ISS_PUB_JWK}`).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
+            const access_token = await new jose.SignJWT({ payload }).setIssuer(`did:jwk:${ISS_PUB_JWK}`).setExpirationTime('5 minutes').setProtectedHeader({ 'alg': 'EdDSA' }).sign(priv_jwk)
             return new Response(JSON.stringify({
                 access_token,
                 token_type: "bearer",
