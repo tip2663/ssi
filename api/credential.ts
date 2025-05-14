@@ -1,6 +1,6 @@
 import * as jose from 'jose';
 import { JwtCredentialPayload } from 'did-jwt-vc'
-import { ISS_DID, ISS_PRIV_JWK } from './const.js';
+import { ISS_DID, ISS_PRIV_JWK, ISS_PUB_JWK } from './const.js';
 import * as uuid from 'uuid'
 
 // const issue = (payload: JwtCredentialPayload) => createVerifiableCredentialJwt(payload, {
@@ -27,9 +27,11 @@ const issue = async (payload: JwtCredentialPayload) => new jose.SignJWT({...payl
 // }, { header: { 'kid': ISS_DID } });
 
 export async function POST(r: Request) {
-    console.log('request: ', r)
     const jsonBodyPayload = await r.json()
-    console.log('body: ', jsonBodyPayload)
+
+    const jwt = await jose.jwtVerify(r.headers.get('Authorization')?.split('Bearer ',2)[1]!, ISS_PUB_JWK);
+    console.log(jwt.payload)
+
     if (jsonBodyPayload['proof'] && jsonBodyPayload['proof']['proof_type'] === 'jwt') {
 
         // verify ssi wallet sender
