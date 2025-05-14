@@ -24,9 +24,9 @@ export async function POST(r: Request) {
     if (jsonBodyPayload['proof'] && jsonBodyPayload['proof']['proof_type'] === 'jwt') {
 
         // verify ssi wallet sender
-        const decodedHeader : any = jose.decodeJwt(jsonBodyPayload.proof.jwt).header
-        const alg : string = decodedHeader.alg
-        const walletdid : string = decodedHeader.kid
+        const decodedHeader = jose.decodeProtectedHeader(jsonBodyPayload.proof.jwt)
+        const alg : string = decodedHeader.alg!
+        const walletdid : string = decodedHeader.kid!
         const didjwk = await jose.importJWK({...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:',2)[1]))),alg})
         await jose.jwtVerify(jsonBodyPayload.proof.jwt, didjwk)
         
