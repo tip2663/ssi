@@ -41,7 +41,7 @@ export async function POST(r: Request) {
         const walletdid: string = decodedHeader.kid!
         const didjwk = await jose.importJWK({ ...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:', 2)[1].replace(/#.+$/,'')))), alg })
         await jose.jwtVerify(jsonBodyPayload.proof.jwt, didjwk)
-        const now = Date.now()
+        const now = Math.floor(Date.now() / 1000) 
         const credential = await issue({
             iat: now,
             nbf: now,
@@ -62,7 +62,7 @@ export async function POST(r: Request) {
                     commentKarma,
                     createdAt
                 },
-                issuanceDate: new Date(now).toISOString()
+                issuanceDate: new Date(now * 1000).toISOString()
             },
             jti:`urn:uuid:${uuid.v4()}`
         })
