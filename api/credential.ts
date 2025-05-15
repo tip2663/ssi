@@ -3,7 +3,7 @@ import { JwtCredentialPayload } from 'did-jwt-vc'
 import { ISS_DID, ISS_PRIV_JWK, ISS_PUB_JWK } from './const.js';
 import * as uuid from 'uuid'
 
-const issue = async (payload: JwtCredentialPayload) => new jose.SignJWT({...payload,iss:ISS_DID}).setProtectedHeader({alg:'EdDSA',kid:ISS_DID,typ:'JWT'}).sign(ISS_PRIV_JWK)
+const issue = async (payload: JwtCredentialPayload) => new jose.SignJWT({...payload,iss:ISS_DID}).setProtectedHeader({alg:'EdDSA',kid:`${ISS_DID}#0`,typ:'JWT'}).sign(ISS_PRIV_JWK)
 export async function POST(r: Request) {
     const jsonBodyPayload = await r.json()
 
