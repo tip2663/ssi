@@ -6,6 +6,10 @@
                 {
                     "key": "Content-Type",
                     "value": "application/json"
+                },
+                {
+                    "key":"Content-Language",
+                    "value":"en"
                 }
             ]
         }
