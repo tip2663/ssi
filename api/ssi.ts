@@ -2,7 +2,6 @@ import * as jose from 'jose';
 import { BOT_PUB_JWK, ISS_DID, ISS_PRIV_JWK } from './const.js';
 
 export async function POST(request: Request) {
-    console.log(request)
     const formData = await request.formData()
     if (formData.get('grant_type') === 'urn:ietf:params:oauth:grant-type:pre-authorized_code') {
         const authcode = formData.get('pre-authorized_code')?.toString()

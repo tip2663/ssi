@@ -13,7 +13,6 @@ export async function POST(r: Request) {
 
         // verify ssi wallet sender
         const decodedHeader = jose.decodeProtectedHeader(jsonBodyPayload.proof.jwt)
-        console.log(decodedHeader)
         const alg: string = decodedHeader.alg!
         const walletdid: string = decodedHeader.kid!
         const didjwk = await jose.importJWK({ ...JSON.parse(decodeURIComponent(atob((walletdid).split('did:jwk:', 2)[1].replace(/#0$/,'')))), alg })
@@ -46,7 +45,6 @@ export async function POST(r: Request) {
             },
             jti:`urn:uuid:${uuid.v4()}`
         })
-        console.log(credential)
         return new Response(JSON.stringify({ credential }), { headers: { 'cache-control': 'no-store', 'content-type': 'application/json' } })
 
     }
